@@ -197,3 +197,5 @@ function Ghost:moveToDir(D, preserve_dir)
         if preserve_dir do self.turnLeft() end
     end
 end
+
+return Ghost
