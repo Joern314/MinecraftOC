@@ -96,7 +96,7 @@ end
 
 function Ghost:save(file)
     file = file or self.file
-    if file != nil then
+    if file ~= nil then
         f = assert(io.open(file, "w"))
         f:write(self.serialize())
         f.close()
@@ -105,7 +105,7 @@ end
 
 function Ghost:load(file)
     file = file or self.file
-    if file != nil then
+    if file ~= nil then
         f = assert(io.open(file, "r"))
         str = f:read("*all")
         self.deserialize(str)
