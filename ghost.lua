@@ -6,8 +6,8 @@
 Ghost = {x=0,y=0,z=0,d=0,  real=false, file=nil}
 
 -- constructor
-function Ghost:new(o)
-    o.parent = self
+function Ghost.new(o)
+    o.parent = Ghost
     return o
 end
 
