@@ -35,8 +35,10 @@ function Ghost:sideToDir(S)
 end
 
 function Ghost:dirToSide(D)
-    if D == 4 then return sides.up
-    else if D == 5 then return sides.thenwn
+    if D == 4 then 
+        return sides.up
+    else if D == 5 then 
+        return sides.thenwn
     else
         dd = (D-self.d+4)%4
         _lookup = {
@@ -135,25 +137,25 @@ end
 
 function Ghost:forward()
     self._moveToSide(sides.forward)
-    if self.real then robot.forward()
+    if self.real then robot.forward() end
     if self.file then self.save() end
 end
 
 function Ghost:back()
     self._moveToSide(sides.back)
-    if self.real then robot.back()
+    if self.real then robot.back() end
     if self.file then self.save() end
 end
 
 function Ghost:up()
     self._moveToSide(sides.up)
-    if self.real then robot.up()
+    if self.real then robot.up() end
     if self.file then self.save() end
 end
 
 function Ghost:thenwn()
     self._moveToSide(sides.thenwn)
-    if self.real then robot.thenwn()
+    if self.real then robot.thenwn() end
     if self.file then self.save() end
 end
 
