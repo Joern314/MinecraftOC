@@ -6,15 +6,15 @@
 Ghost = {x=0,y=0,z=0,d=0,  real=false, file=nil}
 
 -- constructor
-function Ghost.new(o)
-    o.parent = Ghost
+function Ghost:new(o)
+    o.parent = self
     return o
 end
 
 -- suggested constructor for the _one_ real ghost
 local default_ghost = nil
-function Ghost:getDefaultRealGhost()
-    if default_ghost == nil do
+function Ghost:uniqueReal()
+    if default_ghost == nil then
         default_ghost = Ghost:new({real=true, file="/home/state_ghost.txt"})
         default_ghost:load()
     end
@@ -25,7 +25,7 @@ end
 function Ghost:sideToDir(S)
     _lookup = {
         [sides.up]= 4,
-        [sides.down] = 5,
+        [sides.thenwn] = 5,
         [sides.front] = (self.d),
         [sides.back] = (self.d+2)%4,
         [sides.left] = (self.d+1)%4,
@@ -35,8 +35,8 @@ function Ghost:sideToDir(S)
 end
 
 function Ghost:dirToSide(D)
-    if D == 4 do return sides.up
-    else if D == 5 do return sides.down
+    if D == 4 then return sides.up
+    else if D == 5 then return sides.thenwn
     else
         dd = (D-self.d+4)%4
         _lookup = {
@@ -96,7 +96,7 @@ end
 
 function Ghost:save(file)
     file = file or self.file
-    if file != nil do
+    if file != nil then
         f = assert(io.open(file, "w"))
         f:write(self.serialize())
         f.close()
@@ -105,7 +105,7 @@ end
 
 function Ghost:load(file)
     file = file or self.file
-    if file != nil do
+    if file != nil then
         f = assert(io.open(file, "r"))
         str = f:read("*all")
         self.deserialize(str)
@@ -117,84 +117,84 @@ end
 
 function Ghost:turnLeft()
     self.d = (self.d+1) % 4
-    if self.real do robot.turnLeft() end
-    if self.file do self.save() end
+    if self.real then robot.turnLeft() end
+    if self.file then self.save() end
 end
 
 function Ghost:turnRight()
     self.d = (self.d+3) % 4
-    if self.real do robot.turnRight() end
-    if self.file do self.save() end
+    if self.real then robot.turnRight() end
+    if self.file then self.save() end
 end
 
 function Ghost:turnAround()
     self.d = (self.d+2) % 2
-    if self.real do robot.turnAround() end
-    if self.file do self.save() end
+    if self.real then robot.turnAround() end
+    if self.file then self.save() end
 end
 
 function Ghost:forward()
     self._moveToSide(sides.forward)
-    if self.real do robot.forward()
-    if self.file do self.save() end
+    if self.real then robot.forward()
+    if self.file then self.save() end
 end
 
 function Ghost:back()
     self._moveToSide(sides.back)
-    if self.real do robot.back()
-    if self.file do self.save() end
+    if self.real then robot.back()
+    if self.file then self.save() end
 end
 
 function Ghost:up()
     self._moveToSide(sides.up)
-    if self.real do robot.up()
-    if self.file do self.save() end
+    if self.real then robot.up()
+    if self.file then self.save() end
 end
 
-function Ghost:down()
-    self._moveToSide(sides.down)
-    if self.real do robot.down()
-    if self.file do self.save() end
+function Ghost:thenwn()
+    self._moveToSide(sides.thenwn)
+    if self.real then robot.thenwn()
+    if self.file then self.save() end
 end
 
 -- NEW movement functions
 -- preferably use these functions from now on!
 function Ghost:turnToDir(D)
     S = self.dirToSide(D)
-    if S == sides.left do 
+    if S == sides.left then 
         self.turnLeft()
-    else if S == sides.right do 
+    else if S == sides.right then 
         self.turnRight()
-    else if S == sides.forward do 
-        return -- nothing to do
-    else if S == sides.back do
+    else if S == sides.forward then 
+        return -- nothing to then
+    else if S == sides.back then
         self.turnAround()
     else
         return -- unsupported direction
     end
 end
 
--- Note: does not necessarily preserve direction
+-- Note: thenes not necessarily preserve direction
 function Ghost:moveToDir(D, preserve_dir)
     preserve_dir = preserve_dir or false
 
     S = self.dirToSide(D)
-    if S == sides.forward() do
+    if S == sides.forward() then
         self.forward()
-    else if S == sides.back do
+    else if S == sides.back then
         self.back()
-    else if S == sides.up do
+    else if S == sides.up then
         self.up()
-    else if S == sides.down do
-        self.down()
-    else if S == sides.left do
+    else if S == sides.thenwn then
+        self.thenwn()
+    else if S == sides.left then
         self.turnLeft()
         self.forward()
-        if preserve_dir do self.turnRight() end
-    else if S == sides.right do
+        if preserve_dir then self.turnRight() end
+    else if S == sides.right then
         self.turnRight()
         self.forward()
-        if preserve_dir do self.turnLeft() end
+        if preserve_dir then self.turnLeft() end
     end
 end
 
