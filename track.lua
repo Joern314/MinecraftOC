@@ -3,7 +3,8 @@
 -- the robot's position takes the form X,Y,Z with some arbitrary reference point
 -- the robot's orientation takes the form D=0,...,3 where 0=positive X, 1=positive Z, 2=negative X, 3=negative Z, 4=positive Y, 5=negative Y
 
-local obj = {x=0,y=0,z=0,d=0, real=true, file="/home/state_txt"}
+local obj = {x=0,y=0,z=0,d=0, file="/home/state_txt"}
+local retry_time = 0.5
 
 -- convert side, direction, normal 
 local function sideToDir(S)
@@ -110,7 +111,14 @@ end
 
 local function turnLeft()
     obj.d = (obj.d+1) % 4
-    if obj.real then robot.turnLeft() end
+    local success
+    repeat
+        success = robot.turnLeft()
+        if not success then
+            os.sleep(retry_time)
+        end
+    until success
+
     if file then save() end
 end
 
